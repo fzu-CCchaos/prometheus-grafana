@@ -1,0 +1,10 @@
+[Unit]
+Description=Prometheus Push Gateway
+After=network.target
+
+[Service]
+ExecStart=/opt/prometheus_env/pushgateway-1.4.2.linux-amd64/pushgateway
+
+User=root
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,11 @@
+[Unit]
+Description=Grafana
+After=network.target
+
+[Service]
+ExecStart=/opt/prometheus_env/grafana-8.4.7/bin/grafana-server \
+ --config=/opt/prometheus_env/grafana-8.4.7/conf/defaults.ini \
+ --homepath=/opt/prometheus_env/grafana-8.4.7
+
+[Install]
+WantedBy=multi-user.target

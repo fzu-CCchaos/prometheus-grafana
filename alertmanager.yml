@@ -1,0 +1,37 @@
+global:
+  resolve_timeout: 5m
+  # 配置邮件发送信息
+  smtp_smarthost: 'smtp.qq.com:465'
+  smtp_from: '1572280410@qq.com'
+  smtp_auth_username: '1572280410@qq.com'
+  smtp_auth_password: 'fjtviiymuidbgbif' #授权码
+  smtp_hello: 'qq.com'
+  smtp_require_tls: false
+route:
+  #这里的标签列表是接收到报警信息后的重新分组标签
+  group_by: ['alertname','severity']
+  #当一个新的报警分组被创建后，需要等待至少group_wait时间来初始化通知
+  group_wait: 30s
+  #当第一个报警发送后，等待'group_interval'时间来发送新的一组报警信息。
+  group_interval: 40s
+  #如果一个报警信息已经发送成功了，等待'repeat_interval'时间来重新发送他们
+  repeat_interval: 30s
+  #默认的receiver：如果一个报警没有被一个route匹配，则发送给默认的接收器
+  receiver: 'email'
+  #上面所有的属性都由所有子路由继承，并且可以在每个子路由上进行覆盖。
+  routes:
+  - receiver: email
+  #使用标签匹配报警，这里匹配告警规则中severity为warning的告警信息
+    match:
+      severity: warning
+receivers:
+  - name: 'email'
+    email_configs:
+    - to: '1572280410@qq.com'
+      send_resolved: true
+inhibit_rules:
+  - source_match:
+      severity: 'critical'
+    target_match:
+      severity: 'warning'
+    equal: ['alertname', 'severity', 'instance']

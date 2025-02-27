@@ -1,0 +1,14 @@
+[Unit]
+Description=Prometheus alertmanager
+After=local-fs.target network-online.target network.target
+Wants=local-fs.target network-online.target network.target
+
+[Service]
+ExecStart=/opt/prometheus_env/alertmanager-0.24.0.linux-amd64/alertmanager \
+--storage.path=/opt/prometheus_env/alertmanager-0.24.0.linux-amd64/data \
+--config.file=/opt/prometheus_env/alertmanager-0.24.0.linux-amd64/alertmanager.yml
+Restart=on-failure
+
+User=root
+[Install]
+WantedBy=multi-user.target

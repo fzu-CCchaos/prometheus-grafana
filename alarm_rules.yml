@@ -1,0 +1,44 @@
+groups:
+- name: node
+  rules:
+  - alert: server_status1
+    expr: up{} == 0 
+    for: 15s
+    labels:
+      severity: warning
+    annotations:
+      summary: "机器{{ $labels.instance }} 挂了"
+      description: "请立即查看问题!"
+  - alert: server_status2
+    expr: 100 - ((node_memory_MemAvailable_bytes * 100) / node_memory_MemTotal_bytes) > 40     
+    for: 1s
+    labels:
+      severity: warning
+    annotations:
+      summary: "机器{{ $labels.instance }} 内存大于50%"
+      description: "请立即查看问题!"
+  - alert: server_status3
+    expr: (1 - avg(rate(node_cpu_seconds_total{mode="idle"}[2m])) by (instance)) * 100 > 70  
+    for: 1s
+    labels:
+      severity: warning
+    annotations:
+      summary: "机器{{ $labels.instance }} CPU使用率大于70%"
+      description: "请立即查看问题!"        
+  - alert: server_status4
+    expr: max((node_filesystem_size_bytes{fstype=~"ext.?|xfs"}-node_filesystem_free_bytes{fstype=~"ext.?|xfs"}) *100/(node_filesystem_avail_bytes {fstype=~"ext.?|xfs"}+(node_filesystem_size_bytes{fstype=~"ext.?|xfs"}-node_filesystem_free_bytes{fstype=~"ext.?|xfs"})))by(instance) > 80  
+    for: 15s
+    labels:
+      severity: warning
+    annotations:
+      summary: "机器{{ $labels.instance }} 分区使用率大于80%"
+      description: "请立即查看问题!"  
+  #new rule
+  - alert: server_status5
+    expr: node_netstat_Tcp_CurrEstab > 10
+    for: 1s
+    labels:
+      severity: warning
+    annotations:
+      summary: "TCP连接数过大"
+      description: "请立即查看"
